@@ -75,6 +75,10 @@ class ViewController: UIViewController {
     private func operatorCalled(){
         // this should move the lastCompleteNumber into the equation
         if(exponentIsOpen){ closeExponent() }
+        
+        currentEquation += lastCompleteNumber
+        currentEquationAsString = currentEquation
+        
         lastCompleteNumber = "";
     }
     
