@@ -7,7 +7,6 @@
 //
 
 // Known Bugs:
-// after calculating an exponent, the lastCompleteNumber stays in front of the result.
 // negative prefix does not work at beginning of equation
 // negative number prefix always displays at the front (should be in front of next number - consider changing currentEquation to '(-1 * n)
 // catch calculating errors
@@ -184,6 +183,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func toggleSign() {
+        //prefix should go before lastCompleteNumber, not always at the beginning of the entire equation
         if(signedPositive){
             signedPositive = false
             prefix = "-"
