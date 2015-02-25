@@ -7,8 +7,6 @@
 //
 
 // Known Bugs:
-// negative prefix does not work at beginning of equation
-// negative number prefix always displays at the front (should be in front of next number - consider changing currentEquation to '(-1 * n)
 // catch calculating errors
 
 import UIKit
@@ -43,9 +41,12 @@ class ViewController: UIViewController {
         currentEquation += lastCompleteNumber;
         currentEquation = currentEquationModifier + currentEquation;
         var calculatedResult = "\(calculateResult(currentEquation))"
-        resultsLabel.text = formatResult(calculatedResult);
-        // evaluate the results so far
-        currentEquation = ""
+        var formatted_result = formatResult(calculatedResult);
+        resultsLabel.text = formatted_result;
+        currentEquation = calculatedResult;
+        currentEquationAsString = formatted_result;
+        prefix = "";
+        signedPositive = true;
     }
     
     private func formatResult(result: NSString) -> NSString {
@@ -75,9 +76,10 @@ class ViewController: UIViewController {
         // this should move the lastCompleteNumber into the equation
         if(exponentIsOpen){ closeExponent() }
         
-        currentEquation += lastCompleteNumber
+        currentEquation += prefix + lastCompleteNumber
         currentEquationAsString = currentEquation
         
+        prefix = "";
         lastCompleteNumber = "";
     }
     
@@ -130,7 +132,7 @@ class ViewController: UIViewController {
     @IBAction func multiplication() {
         operatorCalled()
         currentEquation += "*"
-        currentEquationAsString += "x"
+        currentEquationAsString += "*"
         
         resultsLabel.text = prefix + currentEquationAsString
     }
@@ -156,7 +158,7 @@ class ViewController: UIViewController {
         operatorCalled()
         
         currentEquation += "/"
-        currentEquationAsString += "÷"
+        currentEquationAsString += "/"
         
         resultsLabel.text = prefix + currentEquationAsString
     }
@@ -183,7 +185,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func toggleSign() {
-        //prefix should go before lastCompleteNumber, not always at the beginning of the entire equation
+        
         if(signedPositive){
             signedPositive = false
             prefix = "-"
@@ -191,6 +193,11 @@ class ViewController: UIViewController {
             signedPositive = true
             prefix = ""
         }
+        //prefix should go before lastCompleteNumber, not always at the beginning of the entire equation
+        currentEquation += prefix + lastCompleteNumber
+        currentEquationAsString = currentEquation
+        
+        prefix = "";
         resultsLabel.text = prefix + currentEquationAsString
     }
 
