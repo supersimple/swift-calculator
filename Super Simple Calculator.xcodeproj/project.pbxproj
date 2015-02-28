@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F0728811AA18A63002505D9 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0728801AA18A63002505D9 /* Operators.swift */; };
 		5FCC6E321A34DE7F0012DD6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC6E311A34DE7F0012DD6D /* AppDelegate.swift */; };
 		5FCC6E341A34DE7F0012DD6D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC6E331A34DE7F0012DD6D /* ViewController.swift */; };
 		5FCC6E371A34DE7F0012DD6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FCC6E351A34DE7F0012DD6D /* Main.storyboard */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F0728801AA18A63002505D9 /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		5FCC6E2C1A34DE7F0012DD6D /* Super Simple Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Super Simple Calculator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FCC6E301A34DE7F0012DD6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FCC6E311A34DE7F0012DD6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				5FCC6E311A34DE7F0012DD6D /* AppDelegate.swift */,
 				5FCC6E331A34DE7F0012DD6D /* ViewController.swift */,
+				5F0728801AA18A63002505D9 /* Operators.swift */,
 				5FCC6E351A34DE7F0012DD6D /* Main.storyboard */,
 				5FCC6E381A34DE7F0012DD6D /* Images.xcassets */,
 				5FCC6E3A1A34DE7F0012DD6D /* LaunchScreen.xib */,
@@ -214,6 +217,7 @@
 			files = (
 				5FCC6E341A34DE7F0012DD6D /* ViewController.swift in Sources */,
 				5FCC6E321A34DE7F0012DD6D /* AppDelegate.swift in Sources */,
+				5F0728811AA18A63002505D9 /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 // Known Bugs:
 // catch calculating errors
+// result directly to exponent causes error
 
 import UIKit
 
@@ -18,9 +19,11 @@ class ViewController: UIViewController {
     var lastCompleteNumber = "";
     var exponentIsOpen = false;
     var exponentValue = "";
+    var operatorIsOpen = false;
     var initialState = true;
     var signedPositive = true;
     var prefix = "";
+    let currentEquationModifier = "1.0 * "
     
     @IBOutlet weak var resultsLabel: UITextField!
     
@@ -36,23 +39,42 @@ class ViewController: UIViewController {
     }
 
     @IBAction func evaluate() {
-        operatorCalled()
-        let currentEquationModifier = "1.0 * "
-        currentEquation += lastCompleteNumber;
-        currentEquation = currentEquationModifier + currentEquation;
-        var calculatedResult = "\(calculateResult(currentEquation))"
-        var formatted_result = formatResult(calculatedResult);
-        resultsLabel.text = formatted_result;
-        currentEquation = calculatedResult;
-        currentEquationAsString = formatted_result;
+        if(!operatorIsOpen){
+            operatorCalled();
+            operatorIsOpen = false;
+            currentEquation = currentEquationModifier + currentEquation + lastCompleteNumber;
+            var calculatedResult = "\(calculateResult(currentEquation))"
+            currentEquation = "";
+            
+            var formatted_result = formatResult(calculatedResult);
+            resultsLabel.text = formatted_result;
+            currentEquationAsString = formatted_result;
+            lastCompleteNumber = formatted_result;
+            resetPrefix();
+            signedPositive = true;
+        }
+    }
+    
+    private func resetPrefix(){
         prefix = "";
-        signedPositive = true;
+    }
+    
+    private func resetCurrentEquation(incString: Bool = false){
+        currentEquation = "";
+        if(incString){ currentEquationAsString = ""; }
+    }
+    
+    private func setResultsLabel(val: NSString) {
+        resultsLabel.text = val;
     }
     
     private func formatResult(result: NSString) -> NSString {
         
         var formatter = NSNumberFormatter()
         formatter.numberStyle = .DecimalStyle
+        formatter.usesSignificantDigits = false;
+        formatter.minimumSignificantDigits = 3;
+        formatter.maximumSignificantDigits = 10;
         return formatter.stringFromNumber(result.doubleValue)!
         
     }
@@ -73,14 +95,16 @@ class ViewController: UIViewController {
     }
     
     private func operatorCalled(){
-        // this should move the lastCompleteNumber into the equation
-        if(exponentIsOpen){ closeExponent() }
-        
-        currentEquation += prefix + lastCompleteNumber
-        currentEquationAsString = currentEquation
-        
-        prefix = "";
-        lastCompleteNumber = "";
+        if(!operatorIsOpen){
+            // this should move the lastCompleteNumber into the equation
+            if(exponentIsOpen){ closeExponent() }
+            operatorIsOpen = true;
+            currentEquation += prefix + lastCompleteNumber
+            currentEquationAsString = currentEquation
+            
+            resetPrefix();
+            lastCompleteNumber = "";
+        }
     }
     
     private func closeExponent(){
@@ -89,14 +113,14 @@ class ViewController: UIViewController {
         resultsLabel.text = prefix + currentEquationAsString
         exponentValue = ""
         exponentIsOpen = false
+        lastCompleteNumber = "";
     }
     
     @IBAction func buttonTapped(sender: AnyObject) {
         var buttonValue = sender.currentTitle
         // Clear value if it is in it's initial state
         if(initialState == true) {
-            currentEquation = ""
-            currentEquationAsString = ""
+            resetCurrentEquation(incString: true);
             initialState = false
         }
         //check if the exponent is open. if so, the following number(s) are the exponent value
@@ -109,64 +133,69 @@ class ViewController: UIViewController {
             currentEquationAsString += buttonValue!!
             updateLastCompleteNumber(buttonValue!!)
         }
-        resultsLabel.text = prefix + currentEquationAsString
+        setResultsLabel(prefix + currentEquationAsString);
+        operatorIsOpen = false;
     }
     
     @IBAction func clearAll() {
-        currentEquation = ""
+        resetCurrentEquation(incString: false);
         currentEquationAsString = "0"
         initialState = true
         lastCompleteNumber = ""
         exponentValue = ""
-        prefix = ""
-        resultsLabel.text = prefix + currentEquationAsString
+        resetPrefix();
+        setResultsLabel(prefix + currentEquationAsString);
     }
     
     @IBAction func insertDecimal(sender: AnyObject) {
-        currentEquation += "."
-        currentEquationAsString = currentEquation
+        currentEquationAsString += "."
         updateLastCompleteNumber(".")
-        resultsLabel.text = prefix + currentEquationAsString
+        setResultsLabel(prefix + currentEquationAsString);
     }
     
     @IBAction func multiplication() {
-        operatorCalled()
-        currentEquation += "*"
-        currentEquationAsString += "*"
-        
-        resultsLabel.text = prefix + currentEquationAsString
+        if(!operatorIsOpen){
+            operatorCalled()
+            currentEquation += "*"
+            currentEquationAsString += "*"
+            
+            setResultsLabel(prefix + currentEquationAsString);
+        }
     }
 
     @IBAction func subtraction() {
-        operatorCalled()
-        currentEquation += "-"
-        currentEquationAsString = currentEquation
-        
-        resultsLabel.text = prefix + currentEquationAsString
+        if(!operatorIsOpen){
+            operatorCalled()
+            currentEquation += "-"
+            currentEquationAsString = currentEquation
+            
+            setResultsLabel(prefix + currentEquationAsString);
+        }
     }
     
     @IBAction func addition() {
-        operatorCalled()
-        
-        currentEquation += "+"
-        currentEquationAsString = currentEquation
-        
-        resultsLabel.text = prefix + currentEquationAsString
+        if(!operatorIsOpen){
+            operatorCalled()
+            
+            currentEquation += "+"
+            currentEquationAsString = currentEquation
+            
+            setResultsLabel(prefix + currentEquationAsString);
+        }
     }
     
     @IBAction func division() {
-        operatorCalled()
+        if(!operatorIsOpen){
+            operatorCalled()
         
-        currentEquation += "/"
-        currentEquationAsString += "/"
+            currentEquation += "/"
+            currentEquationAsString += "/"
         
-        resultsLabel.text = prefix + currentEquationAsString
+            setResultsLabel(prefix + currentEquationAsString);
+        }
     }
     
     @IBAction func exponent() {
-        //this action should take 2 numbers
-        //grab the most recent number
-        //grab the next number for the exponent
         currentEquationAsString += "^"
         exponentIsOpen = true;
     }
@@ -175,13 +204,13 @@ class ViewController: UIViewController {
         if(!lastCompleteNumber.isEmpty){ currentEquation += "*" }
         currentEquation += "(";
         currentEquationAsString += "(";
-        resultsLabel.text = prefix + currentEquationAsString
+        setResultsLabel(prefix + currentEquationAsString);
     }
     
     @IBAction func closeParen() {
         currentEquation += ")"
         currentEquationAsString = currentEquation
-        resultsLabel.text = prefix + currentEquationAsString
+        setResultsLabel(prefix + currentEquationAsString);
     }
     
     @IBAction func toggleSign() {
@@ -191,14 +220,14 @@ class ViewController: UIViewController {
             prefix = "-"
         }else{
             signedPositive = true
-            prefix = ""
+            resetPrefix();
         }
         //prefix should go before lastCompleteNumber, not always at the beginning of the entire equation
         currentEquation += prefix + lastCompleteNumber
         currentEquationAsString = currentEquation
         
-        prefix = "";
-        resultsLabel.text = prefix + currentEquationAsString
+        resetPrefix();
+        setResultsLabel(currentEquationAsString);
     }
 
 }
