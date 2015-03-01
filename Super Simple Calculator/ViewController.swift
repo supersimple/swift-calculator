@@ -9,7 +9,6 @@
 // Known Bugs:
 // catch calculating errors
 // if user enters numbers right after result, clear result and start a new calculation
-// signing toggle on a result causes duplicate equation
 
 import UIKit
 
@@ -25,6 +24,7 @@ class ViewController: UIViewController {
     var signedPositive = true;
     var prefix = "";
     let currentEquationModifier = "1.0 * ";
+    var resultIsOpen = false;
     
     @IBOutlet weak var resultsLabel: UITextField!
     
@@ -51,6 +51,7 @@ class ViewController: UIViewController {
             lastCompleteNumber = calculatedResult;
             resetPrefix();
             signedPositive = true;
+            resultIsOpen = true;
         }
     }
     
@@ -112,7 +113,7 @@ class ViewController: UIViewController {
     
     private func closeExponent(){
         currentEquation += powerOf((lastCompleteNumber as NSString).floatValue,exp:(exponentValue as NSString).floatValue)
-        currentEquationAsString += "^" + exponentValue;
+        //currentEquationAsString += "^" + exponentValue;
         resultsLabel.text = prefix + currentEquationAsString;
         exponentValue = "";
         exponentIsOpen = false;
@@ -136,6 +137,7 @@ class ViewController: UIViewController {
         }
         setResultsLabel(prefix + currentEquationAsString);
         operatorIsOpen = false;
+        resultIsOpen = false;
     }
     
     @IBAction func clearAll() {
@@ -197,7 +199,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func exponent() {
-        currentEquationAsString += lastCompleteNumber + "^";
+        if(resultIsOpen){ currentEquationAsString += lastCompleteNumber; }
+        currentEquationAsString += "^";
         exponentIsOpen = true;
     }
     
